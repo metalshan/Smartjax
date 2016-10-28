@@ -27,14 +27,14 @@ var Smartjax = function() {
 				if(helper.shouldStore(requestObj))
 					return helper.returnWithAddedStore({
 						storeId:requestStoreId,
-						requestObj:requestObj	
+						requestObj:requestObj
 					});
 				else
-					return $.ajax(helper.getOriginalRequestObject(requestObj));	
+					return $.ajax(helper.getOriginalRequestObject(requestObj));
 			}
 		},
 		cleanAll:function () {
-			this.cleanStore({clearAll:true})
+			this.cleanStore({clearAll:true});
 		},
 		cleanStore:function (params) {
 			var groups=params.groups;
@@ -45,7 +45,7 @@ var Smartjax = function() {
 			}
 			groupService.clearGroups(groups);
 		}
-	}
+	};
 
 	var helper={
 		buildRequestStoreId:function (requestObj) {
@@ -86,11 +86,11 @@ var Smartjax = function() {
 					key:params.storeId,
 					value:apiResult
 				});
-				groupService.registerGroup(params.requestObj,params.storeId)
+				groupService.registerGroup(params.requestObj,params.storeId);
 				newDeferred.resolve(apiResult);
 			});
 			defaultPromise.fail(function (apiResult) {
-				newDeferred.reject(apiResult)
+				newDeferred.reject(apiResult);
 			});
 			return newDeferred.promise();
 		},
@@ -114,8 +114,8 @@ var Smartjax = function() {
 		findBy:function (array,key,value) {
 			if(!array || !array.length || !key || !value)
 				return null;
-			var allMatched = $.grep(array, function(e){ 
-				return e[key] == value; 
+			var allMatched = $.grep(array, function(e){
+				return e[key] == value;
 			});
 			if(allMatched && allMatched.length && allMatched[0])
 				return allMatched[0];
@@ -128,12 +128,12 @@ var Smartjax = function() {
 			if(storeIds && storeIds.length){
 				storeIds.forEach(function (storeId) {
 					storeService.clearStoreId(storeId);
-				})
+				});
 			}
 			storeService.setFullStore({});
 			console.log("All Smartjax store data cleared");
 		}
-	}
+	};
 
 	var	storeService={
 		getFullStore:function (storeName) {
@@ -146,7 +146,7 @@ var Smartjax = function() {
 			if(!storeName)
 				sessionStorage.setItem("SmartjaxStore", JSON.stringify(storeData));
 			else
-				sessionStorage.setItem(storeName, JSON.stringify(storeData))
+				sessionStorage.setItem(storeName, JSON.stringify(storeData));
 		},
 		save:function (reqResToSave) {
 			if(typeof(Storage)){
@@ -156,7 +156,7 @@ var Smartjax = function() {
 			}
 		},
 		fetch:function (reqResToFetch) {
-			var stringResponse= sessionStorage.getItem(reqResToFetch.key)
+			var stringResponse= sessionStorage.getItem(reqResToFetch.key);
 			return JSON.parse(stringResponse);
 		},
 		isInStore:function (storeId) {
@@ -173,21 +173,21 @@ var Smartjax = function() {
 			if(!smartjaxStore.storeIds || !smartjaxStore.storeIds.length)
 				smartjaxStore.storeIds=[];
 			smartjaxStore.storeIds.push(key);
-			this.setFullStore(smartjaxStore);		
+			this.setFullStore(smartjaxStore);
 		},
 		clearStoreId:function (storeId) {
 			sessionStorage.removeItem(storeId);
 		}
-	}
+	};
 
-	var groupService={		
+	var groupService={
 		registerGroup:function (requestObj,storeId) {
 			var group = requestObj.group;
 			if(!group)
 				return null;
 			if(!storeId)
 				storeId=helper.buildRequestStoreId(requestObj);
-			
+
 			var smartjaxStore = storeService.getFullStore();
 			if(!smartjaxStore)
 				smartjaxStore={};
@@ -198,12 +198,12 @@ var Smartjax = function() {
 				selectedGroup={
 					group:requestObj.group,
 					storeIds:[],
-				}
+				};
 				smartjaxStore.groups.push(selectedGroup);
 			}
 			if(selectedGroup.storeIds.indexOf(storeId)==-1)
 				selectedGroup.storeIds.push(storeId);
-			storeService.setFullStore(smartjaxStore);	
+			storeService.setFullStore(smartjaxStore);
 			return true;
 		},
 		clearGroupData:function (groupName) {
@@ -217,8 +217,8 @@ var Smartjax = function() {
 				if(storeIds){
 					storeIds.forEach(function (storeId) {
 						mainStoreIds.splice(mainStoreIds.indexOf(storeId),1);
-						storeService.clearStoreId(storeId)
-					});					
+						storeService.clearStoreId(storeId);
+					});
 				}
 				delete selectedGroup;
 				storeService.setFullStore(smartjaxStore);
@@ -227,11 +227,11 @@ var Smartjax = function() {
 		},
 		clearGroups:function (groups) {
 			if(groups && groups.length){
-				groups.forEach($.proxy(function (value,index) {
+				groups.forEach($.proxy(function (value) {
 					this.clearGroupData(value);
 				},this));
 			}
 		}
-	}
+	};
 return smartjax;
 }();
